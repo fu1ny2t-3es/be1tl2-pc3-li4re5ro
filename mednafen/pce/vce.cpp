@@ -31,6 +31,7 @@
 #include "pcecd.h"
 #include <math.h>
 #include <mednafen/settings.h>
+#include <stdio.h>
 
 
 vce_resolution_t vce_resolution;
