@@ -11,10 +11,15 @@
 #include <string.h>
 
 #include <libchdr/flac.h>
+<<<<<<< HEAD
 #include <retro_inline.h>
 #define DR_FLAC_IMPLEMENTATION
 #define DR_FLAC_NO_STDIO
 #define DRFLAC_API static INLINE
+=======
+#define DR_FLAC_IMPLEMENTATION
+#define DR_FLAC_NO_STDIO
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 #include <dr_libs/dr_flac.h>
 
 /***************************************************************************
@@ -29,9 +34,15 @@ static void flac_decoder_write_callback(void *userdata, void *buffer, size_t byt
 
 
 /* getters (valid after reset) */
+<<<<<<< HEAD
 /*static uint32_t sample_rate(flac_decoder *decoder)  { return decoder->sample_rate; }*/
 static uint8_t channels(flac_decoder *decoder)  { return decoder->channels; }
 /*static uint8_t bits_per_sample(flac_decoder *decoder) { return decoder->bits_per_sample; }*/
+=======
+static uint32_t sample_rate(flac_decoder *decoder)  { return decoder->sample_rate; }
+static uint8_t channels(flac_decoder *decoder)  { return decoder->channels; }
+static uint8_t bits_per_sample(flac_decoder *decoder) { return decoder->bits_per_sample; }
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 
 /*-------------------------------------------------
  *  flac_decoder - constructor
@@ -132,10 +143,13 @@ int flac_decoder_reset(flac_decoder* decoder, uint32_t sample_rate, uint8_t num_
 
 int flac_decoder_decode_interleaved(flac_decoder* decoder, int16_t *samples, uint32_t num_samples, int swap_endian)
 {
+<<<<<<< HEAD
 #define	BUFFER	2352	/* bytes per CD audio sector */
 	int16_t buffer[BUFFER];
 	uint32_t buf_samples = BUFFER / channels(decoder);
 
+=======
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	/* configure the uncompressed buffer */
 	memset(decoder->uncompressed_start, 0, sizeof(decoder->uncompressed_start));
 	decoder->uncompressed_start[0] = samples;
@@ -143,6 +157,12 @@ int flac_decoder_decode_interleaved(flac_decoder* decoder, int16_t *samples, uin
 	decoder->uncompressed_length = num_samples;
 	decoder->uncompressed_swap = swap_endian;
 
+<<<<<<< HEAD
+=======
+#define	BUFFER	2352	/* bytes per CD audio sector */
+	int16_t buffer[BUFFER];
+	uint32_t buf_samples = BUFFER / channels(decoder);
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	/* loop until we get everything we want */
 	while (decoder->uncompressed_offset < decoder->uncompressed_length) {
 		uint32_t frames = (num_samples < buf_samples ? num_samples : buf_samples);
@@ -303,3 +323,7 @@ static drflac_bool32 flac_decoder_seek_callback(void *userdata, int offset, drfl
 	}
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
