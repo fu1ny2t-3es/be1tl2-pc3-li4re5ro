@@ -349,7 +349,11 @@ static core_file *core_stdio_fopen(char const *path);
 static uint64_t core_stdio_fsize(core_file *file);
 static size_t core_stdio_fread(void *ptr, size_t size, size_t nmemb, core_file *file);
 static int core_stdio_fclose(core_file *file);
+<<<<<<< HEAD
 static int core_stdio_fclose_nonowner(core_file *file); /* alternate fclose used by chd_open_file */
+=======
+static int core_stdio_fclose_nonowner(core_file *file); // alternate fclose used by chd_open_file
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 static int core_stdio_fseek(core_file* file, int64_t offset, int whence);
 
 /* internal header operations */
@@ -833,12 +837,19 @@ static void huff_codec_free(void *codec)
 
 static chd_error huff_codec_decompress(void *codec, const uint8_t *src, uint32_t complen, uint8_t *dest, uint32_t destlen)
 {
+<<<<<<< HEAD
 	uint32_t cur;
 	chd_error result;
 	huff_codec_data* huff_codec = (huff_codec_data*) codec;
 	struct bitstream* bitbuf = create_bitstream(src, complen);
 
 	/* first import the tree */
+=======
+	huff_codec_data* huff_codec = (huff_codec_data*) codec;
+	struct bitstream* bitbuf = create_bitstream(src, complen);
+
+	// first import the tree
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	enum huffman_error err = huffman_import_tree_huffman(huff_codec->decoder, bitbuf);
 	if (err != HUFFERR_NONE)
 	{
@@ -846,11 +857,20 @@ static chd_error huff_codec_decompress(void *codec, const uint8_t *src, uint32_t
 		return CHDERR_DECOMPRESSION_ERROR;
 	}
 
+<<<<<<< HEAD
 	/* then decode the data */
 	for (cur = 0; cur < destlen; cur++)
 		dest[cur] = huffman_decode_one(huff_codec->decoder, bitbuf);
 	bitstream_flush(bitbuf);
 	result = bitstream_overflow(bitbuf) ? CHDERR_DECOMPRESSION_ERROR : CHDERR_NONE;
+=======
+	// then decode the data
+	uint32_t cur;
+	for (cur = 0; cur < destlen; cur++)
+		dest[cur] = huffman_decode_one(huff_codec->decoder, bitbuf);
+	bitstream_flush(bitbuf);
+	chd_error result = bitstream_overflow(bitbuf) ? CHDERR_DECOMPRESSION_ERROR : CHDERR_NONE;
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 
 	free(bitbuf);
 	return result;
@@ -925,7 +945,11 @@ static chd_error flac_codec_decompress(void *codec, const uint8_t *src, uint32_t
 
 static uint32_t cdfl_codec_blocksize(uint32_t bytes)
 {
+<<<<<<< HEAD
 	/* for CDs it seems that CD_MAX_SECTOR_DATA is the right target */
+=======
+	// for CDs it seems that CD_MAX_SECTOR_DATA is the right target
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	uint32_t blocksize = bytes / 4;
 	while (blocksize > CD_MAX_SECTOR_DATA)
 		blocksize /= 2;
@@ -1060,6 +1084,7 @@ static void zstd_codec_free(void* codec)
  */
 static chd_error zstd_codec_decompress(void* codec, const uint8_t *src, uint32_t complen, uint8_t *dest, uint32_t destlen)
 {
+<<<<<<< HEAD
 	ZSTD_inBuffer input;
 	ZSTD_outBuffer output;
 
@@ -1077,12 +1102,24 @@ static chd_error zstd_codec_decompress(void* codec, const uint8_t *src, uint32_t
 	output.size = destlen;
 	output.pos  = 0;
 
+=======
+	/* initialize */
+	zstd_codec_data* zstd_codec = (zstd_codec_data*) codec;
+	//reset decompressor
+	size_t zstd_res =  ZSTD_initDStream(zstd_codec->dstream);
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	if (ZSTD_isError(zstd_res)) 
 	{
 		printf("INITI DSTREAM FAILED!\n");
 		return CHDERR_DECOMPRESSION_ERROR;
 	}
 
+<<<<<<< HEAD
+=======
+	ZSTD_inBuffer input =  {src, complen, 0};
+	ZSTD_outBuffer output = {dest, destlen, 0 };
+
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	while ((input.pos < input.size) && (output.pos < output.size))
 	{
 		zstd_res = ZSTD_decompressStream(zstd_codec->dstream, &output, &input);
@@ -1331,7 +1368,11 @@ static const codec_interface codec_interfaces[] =
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE uint64_t get_bigendian_uint64_t(const uint8_t *base)
+=======
+static inline uint64_t get_bigendian_uint64_t(const uint8_t *base)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	return ((uint64_t)base[0] << 56) | ((uint64_t)base[1] << 48) | ((uint64_t)base[2] << 40) | ((uint64_t)base[3] << 32) |
 			((uint64_t)base[4] << 24) | ((uint64_t)base[5] << 16) | ((uint64_t)base[6] << 8) | (uint64_t)base[7];
@@ -1342,7 +1383,11 @@ static INLINE uint64_t get_bigendian_uint64_t(const uint8_t *base)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void put_bigendian_uint64_t(uint8_t *base, uint64_t value)
+=======
+static inline void put_bigendian_uint64_t(uint8_t *base, uint64_t value)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	base[0] = value >> 56;
 	base[1] = value >> 48;
@@ -1359,7 +1404,11 @@ static INLINE void put_bigendian_uint64_t(uint8_t *base, uint64_t value)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE uint64_t get_bigendian_uint48(const uint8_t *base)
+=======
+static inline uint64_t get_bigendian_uint48(const uint8_t *base)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	return  ((uint64_t)base[0] << 40) | ((uint64_t)base[1] << 32) |
 			((uint64_t)base[2] << 24) | ((uint64_t)base[3] << 16) | ((uint64_t)base[4] << 8) | (uint64_t)base[5];
@@ -1370,7 +1419,11 @@ static INLINE uint64_t get_bigendian_uint48(const uint8_t *base)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void put_bigendian_uint48(uint8_t *base, uint64_t value)
+=======
+static inline void put_bigendian_uint48(uint8_t *base, uint64_t value)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	value &= 0xffffffffffff;
 	base[0] = value >> 40;
@@ -1385,7 +1438,11 @@ static INLINE void put_bigendian_uint48(uint8_t *base, uint64_t value)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE uint32_t get_bigendian_uint32_t(const uint8_t *base)
+=======
+static inline uint32_t get_bigendian_uint32_t(const uint8_t *base)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	return (base[0] << 24) | (base[1] << 16) | (base[2] << 8) | base[3];
 }
@@ -1395,7 +1452,11 @@ static INLINE uint32_t get_bigendian_uint32_t(const uint8_t *base)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void put_bigendian_uint32_t(uint8_t *base, uint32_t value)
+=======
+static inline void put_bigendian_uint32_t(uint8_t *base, uint32_t value)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	base[0] = value >> 24;
 	base[1] = value >> 16;
@@ -1408,7 +1469,11 @@ static INLINE void put_bigendian_uint32_t(uint8_t *base, uint32_t value)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void put_bigendian_uint24(uint8_t *base, uint32_t value)
+=======
+static inline void put_bigendian_uint24(uint8_t *base, uint32_t value)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	value &= 0xffffff;
 	base[0] = value >> 16;
@@ -1421,7 +1486,11 @@ static INLINE void put_bigendian_uint24(uint8_t *base, uint32_t value)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE uint32_t get_bigendian_uint24(const uint8_t *base)
+=======
+static inline uint32_t get_bigendian_uint24(const uint8_t *base)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	return (base[0] << 16) | (base[1] << 8) | base[2];
 }
@@ -1431,7 +1500,11 @@ static INLINE uint32_t get_bigendian_uint24(const uint8_t *base)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE uint16_t get_bigendian_uint16(const uint8_t *base)
+=======
+static inline uint16_t get_bigendian_uint16(const uint8_t *base)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	return (base[0] << 8) | base[1];
 }
@@ -1441,7 +1514,11 @@ static INLINE uint16_t get_bigendian_uint16(const uint8_t *base)
     the data stream in bigendian order
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void put_bigendian_uint16(uint8_t *base, uint16_t value)
+=======
+static inline void put_bigendian_uint16(uint8_t *base, uint16_t value)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	base[0] = value >> 8;
 	base[1] = value;
@@ -1452,7 +1529,11 @@ static INLINE void put_bigendian_uint16(uint8_t *base, uint16_t value)
     entry from the datastream
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void map_extract(const uint8_t *base, map_entry *entry)
+=======
+static inline void map_extract(const uint8_t *base, map_entry *entry)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	entry->offset = get_bigendian_uint64_t(&base[0]);
 	entry->crc = get_bigendian_uint32_t(&base[8]);
@@ -1465,7 +1546,11 @@ static INLINE void map_extract(const uint8_t *base, map_entry *entry)
     entry to the datastream
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void map_assemble(uint8_t *base, map_entry *entry)
+=======
+static inline void map_assemble(uint8_t *base, map_entry *entry)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	put_bigendian_uint64_t(&base[0], entry->offset);
 	put_bigendian_uint32_t(&base[8], entry->crc);
@@ -1477,7 +1562,11 @@ static INLINE void map_assemble(uint8_t *base, map_entry *entry)
 /*-------------------------------------------------
     map_size_v5 - calculate CHDv5 map size
 -------------------------------------------------*/
+<<<<<<< HEAD
 static INLINE int map_size_v5(chd_header* header)
+=======
+static inline int map_size_v5(chd_header* header)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	return header->hunkcount * header->mapentrybytes;
 }
@@ -1536,7 +1625,11 @@ uint16_t crc16(const void *data, uint32_t length)
 /*-------------------------------------------------
 	compressed - test if CHD file is compressed
 +-------------------------------------------------*/
+<<<<<<< HEAD
 static INLINE int chd_compressed(chd_header* header) {
+=======
+static inline int chd_compressed(chd_header* header) {
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	return header->compression[0] != CHD_CODEC_NONE;
 }
 
@@ -1546,7 +1639,11 @@ static INLINE int chd_compressed(chd_header* header) {
 
 static chd_error decompress_v5_map(chd_file* chd, chd_header* header)
 {
+<<<<<<< HEAD
 	/*int result = 0;*/
+=======
+	int result = 0;
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	uint32_t hunknum;
 	int repcount = 0;
 	uint8_t lastcomp = 0;
@@ -1572,13 +1669,21 @@ static chd_error decompress_v5_map(chd_file* chd, chd_header* header)
 		if (header->rawmap == NULL)
 			return CHDERR_OUT_OF_MEMORY;
 		core_fseek(chd->file, header->mapoffset, SEEK_SET);
+<<<<<<< HEAD
 		core_fread(chd->file, header->rawmap, rawmapsize);
+=======
+		result = core_fread(chd->file, header->rawmap, rawmapsize);
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 		return CHDERR_NONE;
 	}
 
 	/* read the reader */
 	core_fseek(chd->file, header->mapoffset, SEEK_SET);
+<<<<<<< HEAD
 	core_fread(chd->file, rawbuf, sizeof(rawbuf));
+=======
+	result = core_fread(chd->file, rawbuf, sizeof(rawbuf));
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	mapbytes = get_bigendian_uint32_t(&rawbuf[0]);
 	firstoffs = get_bigendian_uint48(&rawbuf[4]);
 	mapcrc = get_bigendian_uint16(&rawbuf[10]);
@@ -1591,7 +1696,11 @@ static chd_error decompress_v5_map(chd_file* chd, chd_header* header)
 	if (compressed_ptr == NULL)
 		return CHDERR_OUT_OF_MEMORY;
 	core_fseek(chd->file, header->mapoffset + 16, SEEK_SET);
+<<<<<<< HEAD
 	core_fread(chd->file, compressed_ptr, mapbytes);
+=======
+	result = core_fread(chd->file, compressed_ptr, mapbytes);
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 	bitbuf = create_bitstream(compressed_ptr, sizeof(uint8_t) * mapbytes);
 	header->rawmap = (uint8_t*)malloc(rawmapsize);
 	if (header->rawmap == NULL)
@@ -1716,7 +1825,11 @@ static chd_error decompress_v5_map(chd_file* chd, chd_header* header)
     entry in old format from the datastream
 -------------------------------------------------*/
 
+<<<<<<< HEAD
 static INLINE void map_extract_old(const uint8_t *base, map_entry *entry, uint32_t hunkbytes)
+=======
+static inline void map_extract_old(const uint8_t *base, map_entry *entry, uint32_t hunkbytes)
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	entry->offset = get_bigendian_uint64_t(&base[0]);
 	entry->crc = 0;
@@ -2777,8 +2890,12 @@ static chd_error hunk_read_into_memory(chd_file *chd, uint32_t hunknum, uint8_t 
 			blockoffs = (uint64_t)get_bigendian_uint32_t(rawmap) * (uint64_t)chd->header.hunkbytes;
 			if (blockoffs != 0) {
 				core_fseek(chd->file, blockoffs, SEEK_SET);
+<<<<<<< HEAD
 				/*int result =*/
 				core_fread(chd->file, dest, chd->header.hunkbytes);
+=======
+				int result = core_fread(chd->file, dest, chd->header.hunkbytes);
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 			/* TODO
 			else if (m_parent_missing)
 				throw CHDERR_REQUIRES_PARENT; */
@@ -2872,11 +2989,17 @@ static chd_error hunk_read_into_memory(chd_file *chd, uint32_t hunknum, uint8_t 
 				return hunk_read_into_memory(chd, blockoffs, dest);
 
 			case COMPRESSION_PARENT:
+<<<<<<< HEAD
 			{
 				uint8_t units_in_hunk = chd->header.hunkbytes / chd->header.unitbytes;
 
 				if (chd->parent == NULL)
 					return CHDERR_REQUIRES_PARENT;
+=======
+				if (chd->parent == NULL)
+					return CHDERR_REQUIRES_PARENT;
+				uint8_t units_in_hunk = chd->header.hunkbytes / chd->header.unitbytes;
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 
 				/* blockoffs is aligned to units_in_hunk */
 				if (blockoffs % units_in_hunk == 0) {
@@ -2901,7 +3024,10 @@ static chd_error hunk_read_into_memory(chd_file *chd, uint32_t hunknum, uint8_t 
 					memcpy(dest + (units_in_hunk - unit_in_hunk) * chd->header.unitbytes, buf, unit_in_hunk * chd->header.unitbytes);
 					free(buf);
 				}
+<<<<<<< HEAD
 			}
+=======
+>>>>>>> a2694e6 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 		}
 		return CHDERR_NONE;
 	}
