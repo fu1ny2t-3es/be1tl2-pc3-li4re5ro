@@ -304,7 +304,11 @@ static const uint16_t qoffsets[ECC_Q_NUM_BYTES][ECC_Q_COMP] =
  *-------------------------------------------------
  */
 
+<<<<<<< HEAD
 static INLINE uint8_t ecc_source_byte(const uint8_t *sector, uint32_t offset)
+=======
+static inline uint8_t ecc_source_byte(const uint8_t *sector, uint32_t offset)
+>>>>>>> d57e9f7 (git subrepo clone (merge) https://github.com/rtissera/libchdr deps/libchdr)
 {
 	/* in mode 2 always treat these as 0 bytes */
 	return (sector[MODE_OFFSET] == 2 && offset < 4) ? 0x00 : sector[SYNC_OFFSET + SYNC_NUM_BYTES + offset];
